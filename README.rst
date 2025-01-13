@@ -56,8 +56,8 @@ Create a file `test-model/main.py` with the following content:
     import pandas as pd
 
     class Model():
-        def __init__(self):
-            logging.info('Test Model initialised')
+        def __init__(self, arguments: dict):
+            logging.info(f'Test Model initialised arguments: {arguments}')
             
         def execute(self, arguments: dict) -> dict:
             logging.info(f'Test Model executed with arguments: {arguments}')
@@ -71,6 +71,6 @@ Execute the following code:
     logging.basicConfig(level=logging.INFO)
     from envisolation import EnvIsolatedModel
 
-    model = EnvIsolatedModel(model_id="test-model", model_path="test_model", pip_requirements_path="test_model/requirements.txt")
+    model = EnvIsolatedModel(model_id="test-model", model_path="test_model", pip_requirements_path="test_model/requirements.txt", model_arguments={"test_argument":1})
     logging.info(model.execute({"input": "test"}))
     model.unload()
