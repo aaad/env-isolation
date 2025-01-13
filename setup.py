@@ -8,7 +8,7 @@ import setuptools
 
 name = "env-isolation"
 description = "Isolates the environment to seperate pip environments."
-version = "0.2.0"
+version = "0.3.0"
 release_status = "Development Status :: 4 - Beta"
 dependencies = [
     "requests",
@@ -23,9 +23,7 @@ readme_filename = os.path.join(package_root, "README.rst")
 with io.open(readme_filename, encoding="utf-8") as readme_file:
     readme = readme_file.read()
 
-packages = [
-    package for package in setuptools.find_packages()
-]
+packages = [package for package in setuptools.find_packages()]
 
 setuptools.setup(
     name=name,
