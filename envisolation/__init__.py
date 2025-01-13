@@ -19,14 +19,17 @@ class EnvIsolatedModel:
 
     def __init__(
         self,
-        model_id: str,
-        model_path: str,
-        pip_requirements_path: str,
-        model_arguments: dict = {},
-        base_env_dir: str | None = None,
-        readiness_probe_timeout_s: int = 300,
-        host_port: int | None = None,
-        python_executable="python",
+        model_id: str,  # The id of the model
+        model_path: str,  # The path the model is in
+        pip_requirements_path: str,  # The path to the pip requirements file
+        model_arguments: dict = {},  # Arguments to pass to the model
+        base_env_dir: str | None = None,  # Path to of environment dir that is copied
+        env_install_dir: (
+            str | None
+        ) = None,  # The install path of the environment. If None a temp dir is created
+        readiness_probe_timeout_s: int = 300,  # Readiness probe timeout
+        host_port: int | None = None,  # Host port, None = search free port
+        python_executable="python",  # Python executable name
     ):
         self.host_port = (
             host_port if host_port != None else self.__get_free_listenable_port()
@@ -37,6 +40,7 @@ class EnvIsolatedModel:
         self.model_path = model_path
         self.pip_requirements_path = pip_requirements_path
         self.base_env_dir = base_env_dir
+        self.env_install_dir = env_install_dir
         self.readiness_probe_timeout_s = readiness_probe_timeout_s
         self.env_dir = self.__install_dependencies()
         self.model_url = self.__load_model()
@@ -193,7 +197,14 @@ class EnvIsolatedModel:
 
         dir_name = hashlib.sha256(content.encode("utf-8")).hexdigest()
 
-        env_dir = os.path.join(tempfile.gettempdir(), dir_name)
+        env_dir = os.path.join(
+            (
+                tempfile.gettempdir()
+                if self.env_install_dir == None
+                else self.env_install_dir
+            ),
+            dir_name,
+        )
         return os.path.abspath(env_dir)
 
     def __message_queue_to_str(self, message_queue: queue.Queue):
