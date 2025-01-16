@@ -130,7 +130,11 @@ class EnvIsolatedModel:
                     int(float(self.readiness_probe_timeout_s - 1) / 2.0) + 5
                 ):
                     try:
-                        requests.get(healthy_url).raise_for_status()
+                        result = requests.get(healthy_url).json()
+                        
+                        if 'error' in result:                            
+                            break
+                        
                         logging.debug(f"Model {self.model_id} is now available.")
                         self.is_loaded = True
                         return model_url
