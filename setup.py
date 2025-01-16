@@ -8,7 +8,7 @@ import setuptools
 
 name = "env-isolation"
 description = "Isolates the environment to seperate pip environments."
-version = "0.5.0"
+version = "0.6.0"
 release_status = "Development Status :: 4 - Beta"
 dependencies = [
     "requests",

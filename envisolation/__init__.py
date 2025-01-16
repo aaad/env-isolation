@@ -81,7 +81,7 @@ class EnvIsolatedModel:
         healthy_url = f"{model_url}/healthy"
 
         try:
-            requests.get(healthy_url)
+            requests.get(healthy_url).raise_for_status()
             return model_url
         except:
             logging.info(
@@ -130,7 +130,7 @@ class EnvIsolatedModel:
                     int(float(self.readiness_probe_timeout_s - 1) / 2.0) + 5
                 ):
                     try:
-                        requests.get(healthy_url)
+                        requests.get(healthy_url).raise_for_status()
                         logging.debug(f"Model {self.model_id} is now available.")
                         self.is_loaded = True
                         return model_url
