@@ -43,14 +43,25 @@ class SimpleHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         pass
 
     def do_GET(self):
-        if self.path == "/healthy":
-            self.send_response(200)
+        try:
+            if self.path == "/healthy":
+                if model_exception != None:
+                    raise model_exception
+                
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(json.dumps({"time": time.time()}).encode('utf-8'))
+            else:
+                self.send_response(404)
+                self.end_headers()
+        except Exception as e:
+            self.send_response(500)
             self.end_headers()
-            self.wfile.write(json.dumps({"time": time.time()}).encode("utf-8"))
-        else:
-            self.send_response(404)
-            self.end_headers()
-
+            self.wfile.write(json.dumps({
+                "error": str(e),
+                "stacktrace": traceback.format_exc(),
+                "python_version": str(sys.version_info),
+            }).encode('utf-8'))
     def do_POST(self):
         if self.path == "/execute":
             content_length = int(self.headers["Content-Length"])
