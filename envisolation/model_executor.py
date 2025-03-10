@@ -29,6 +29,7 @@ try:
     logging.info("Model initialised.")
 except Exception as e:
     model_exception = e
+    logging.error(traceback.format_exc())
     logging.error(f"Model could not be initialised: {model_exception}")
 
 import http.server
